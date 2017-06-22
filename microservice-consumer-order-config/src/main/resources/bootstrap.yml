@@ -1,0 +1,16 @@
+#config 驱动的格式
+spring:
+  application:
+    name: microservice-consumer-order-config    # 对应config server所获取的配置文件的{application}
+  cloud:
+    config:
+      #username: user1
+      #password: password1
+      profile: default
+      label: master
+      uri: http://192.168.175.24:8080/
+  rabbitmq:
+    host: 192.168.175.24
+    port: 5672
+    username: guest
+    password: guest

@@ -1,0 +1,12 @@
+server:
+  port: 8200
+spring:
+  application:
+    name: microservice-dashboard
+eureka:
+  client:
+    service-url:
+      defaultZone: http://user1:password1@eureka-ha-1:8761/eureka,http://user1:password1@eureka-ha-2:8761/eureka #这个地方比较恶心啊，居然要写一堆
+  instance:
+    prefer-ip-address: true #默认是false
+    #instance-id: ${spring.application.name}:${spring.application.instance_id:${server.port}}

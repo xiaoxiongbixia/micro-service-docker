@@ -1,0 +1,4 @@
+spring:
+  profiles: config-client-8500
+server:
+  port: 8500

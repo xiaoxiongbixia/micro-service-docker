@@ -1,0 +1,4 @@
+Dashboard就是一个工具，如果平时想用呢，可以部署在某个服务里边，比如eureka，但是生产环境中，因为这个东西也是要占用资源的，所以单独部署比较好
+
+他是用来监控单点/hystrix.stream
+或者监控集群/turbine.stream 或者 /turbine.stream?cluster=xxx

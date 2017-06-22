@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: microservice-discovery-eureka-ha
+security:
+  user:
+    name: user1
+    password: password1
+  basic:
+    enabled: true
+    
+#以下的写法是通过spring.profiles关键字做区分，每一个profiles都是一个配置，供给配置可以写在上边
+---
+server:
+  port: 8761
+spring:
+  profiles: eureka-ha-profile1 #名字随意，但要唯一
+eureka:
+  instance:
+    hostname: eureka-ha-1 #本机测试需要配置host文件
+  client:
+    serviceUrl:
+      defaultZone: http://user1:password1@eureka-ha-2:8761/eureka/ #更多其他节点，可以使用逗号分隔，这里的url不能是当前eureka server节点
+
+---
+server:
+  port: 8761
+spring:
+  profiles: eureka-ha-profile2
+eureka:
+  instance:
+    hostname: eureka-ha-2
+  client:
+    serviceUrl:
+      defaultZone: http://user1:password1@eureka-ha-1:8761/eureka/

@@ -1,0 +1,20 @@
+server:
+  port: 8300
+spring:
+  application:
+    name: microservice-turbine
+eureka:
+  client:
+    healthcheck:
+      enabled: true #开启健康检查, 这个参数好像没啥用
+    service-url:
+      defaultZone: http://user1:password1@eureka-ha-1:8761/eureka,http://user1:password1@eureka-ha-1:8762/eureka #这个地方比较恶心啊，居然要写一堆
+  instance:
+    prefer-ip-address: true #默认是false
+    #instance-id: ${spring.application.name}:${spring.application.instance_id:${server.port}}
+#一下这个配置是来告诉turbine监控哪些服务的，多个服务用逗号，是写的服务名哦
+turbine:
+  aggregator:
+    clusterConfig: default
+  appConfig: microservice-consumer-order,microservice-consumer-movie
+  clusterNameExpression: "'default'"

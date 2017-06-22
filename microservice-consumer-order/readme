@@ -1,0 +1,20 @@
+1.消费端demo
+
+2.调用FeignClient
+  Feign客户端自定义配置
+  Feign的配置也可以通过YML配置，但是这个时候的配置是通用配置，不像代码那样可以控制到每一个client
+  Feign还有一些高级使用，比如压缩算法啊啥的，这里没有demo
+
+3.调用Ribbo负载均衡
+  Ribbon自定义配置
+
+4.断路器
+  Feign和Ribbon的断路器，不管服务存在不存在，或者打开没打开，都会直接走断路器方法，和zuul的ZuulFallbackProvider不一样，Zuul的是必须服务信息存在，但是连接不上的时候才会走断路器
+    只要方法发生异常就会走断路器方法
+  Feign的Fallback类和FallbackFactory类不能同时使用
+    断路器是在5秒以内失败20次，就会打开。打开之后，方法会直接走断路器方法，但是会过很一小段时间就尝试走原方法，一旦尝试通过，关闭断路器，否则继续打开断路器。
+    如果Feign已经配置了Fallback或者FallbackFactory，但是在调用feign的外层方法又配置了@HystrixCommand的话，就会走@HystrixCommand方法
+5.超时时间
+    不管是Feign还是Ribbon，超时时间都是1秒以内，这里有个默认配置，回头查找下
+    断路器的方法@HystrixCommand有一个关于Thread类型还是信号量类型的，这里没有过多给出demo
+    断路器还有一个比较其他的插件https://github.com/Netflix/Hystrix/tree/master/hystrix-contrib/hystrix-javanica，这里也没有测试

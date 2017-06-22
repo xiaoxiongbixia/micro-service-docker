@@ -1,0 +1,53 @@
+spring:
+  jpa:
+    generate-ddl: false
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  datasource:
+    platform: h2
+    schema: classpath:schema.sql
+    data: classpath:data.sql
+logging:
+  level:
+    root: info
+    org.hibernate: info
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.hibernate.type.descriptor.sql.BasicExtractor: TRACE
+    com.microservice.base: debug
+    
+eureka:
+  client:
+    service-url:
+      defaultZone: http://user1:password1@eureka-ha-1:8761/eureka,http://user1:password1@eureka-ha-2:8761/eureka #这个地方比较恶心啊，居然要写一堆
+  instance:
+    prefer-ip-address: true #默认是false
+    #instance-id: ${spring.application.name}:${spring.application.instance_id:${server.port}}
+    metadata-map:
+      #zone: ABC #这个键原本有，配置了会影响客户端行为
+      myself: joshua #这个键原本没有，配置了不会影响客户端行为
+
+#以下是模拟三个底层微服务，并且每个服务启动两个节点
+---
+spring:
+  profiles: microservice-user1-7901
+  application:
+    name: microservice-provider-user1 #建议都使用小写，都使用大写也行，尽量不要混写
+server:
+  port: 7901
+
+---
+spring:
+  profiles: microservice-user2-7903
+  application:
+    name: microservice-provider-user2 #建议都使用小写，都使用大写也行，尽量不要混写
+server:
+  port: 7903
+
+---
+spring:
+  profiles: microservice-user3-7905
+  application:
+    name: microservice-provider-user3 #建议都使用小写，都使用大写也行，尽量不要混写
+server:
+  port: 7905

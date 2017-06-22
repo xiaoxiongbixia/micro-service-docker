@@ -1,0 +1,12 @@
+这个案例表明，应用可以只连接到config server就好了，然后它的一切配置都可以从config中获取到。
+
+有个比较好玩的悖论。就是如果config-server使用eureka管理的，那么这个服务就要配置eureka的信息，用来获取config的信息。
+如果config-server不是用eureka管理的，反而是Nginx反向代理的话，那这个服务就可以把一切消息丢给config-server来配置了，包括eureka的消息。本案例玩的是这种
+但是这样玩有一个缺点哦，就是本地没办法多指定几个端口了。现在我把端口配置到本地
+
+另外，我做了下测试，向一些参数refresh后会直接生效，
+但是比如management.security.enabled: true， feign.hystrix.enabled: false 这种东西，我设置了好像就没有啥用，需要重启才能生效
+
+另外是Config驱动有限，还是服务治理（Eureka）驱动优先，各有利弊吧。
+比如Config驱动优先，那么所有的项目都通过bootstrap.yml绑定到config上就好了，这个时候config搞个Nginx比较好, 因为它配置不配置到Eureka上已经没意义了，没有项目会从Eureka获取config server的信息
+比如Eureka驱动优先，那么所有的项目都注册Eureka，然后其他配置都从Eureka上的Config Server中获取。

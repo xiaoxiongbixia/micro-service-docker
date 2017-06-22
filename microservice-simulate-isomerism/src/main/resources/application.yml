@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: microservice-simulate-isomerism
+server:
+  port: 8250
+
+spring.mvc.static-path-pattern: /static/** # Path pattern used for static resources.

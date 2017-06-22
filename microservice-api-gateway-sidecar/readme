@@ -1,0 +1,13 @@
+1.Sidecar的功能相当于是一个桥的用处, 指向一个异构服务，这个异构服务必须有/health或/health.json方法，返回要求格式的数据
+
+2.我这里由于没有异构服务，就用它代理了一个同构的微服务，那么这个微服务若想要/health方法，必须自己实现或者引入acturator组件
+
+3.一个Sidecar只能代理一个服务，可以是本机的（只需要指定端口），也可以是远程的（需要指定端口和host），
+    假如多个底层服务用Nginx包装了， 那么这里只用一个sidecar可以代表全部，但是实际是没意义的，因为并发量满足不了需求，
+    所以在eureka中，实际是一个sidecar代理一个微服务的节点，并将sidecar注册到eureka上。异构服务相当于是透明的。
+
+4.代理的服务如果又什么context-path或者home page啥的，sidecar最后也做相关配置，这样访问的时候才更贴近与事实
+
+5.由于新版本的问题，sidecar默认看/health啊，/routes啊，都显示不出来什么数据。所以像其他服务一样，需要配置
+  management.security.enabled: false
+    另外sidecar本身也有zuul的功能，http://localhost:8150/microservice-consumer-order/spring-feign1/user/1，像这种路径可以访问，就比较奇葩咯

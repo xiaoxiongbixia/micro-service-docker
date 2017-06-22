@@ -1,0 +1,22 @@
+1. 公司的网络，用sts启动的话访问不到外边。需要手机网络
+
+2. 访问地址如下:
+              http://192.168.56.1:8080/microservice-consumer-order-config-default.properties 指/microservice-consumer-order-config/application.yml
+              http://192.168.56.1:8080/microservice-consumer-order-config-dev.properties 指/microservice-consumer-order-config/application-dev.yml，如果文件不存在，则指向/microservice-consumer-order-config/application.yml，如果还不存在则指向/application.yml
+              http://192.168.56.1:8080/microservice-consumer-order-config.properties 指/application.yml
+              http://192.168.56.1:8080/application-default.properties 指/application.yml
+              http://192.168.56.1:8080/xxx-default.properties 指/application.yml
+              http://192.168.56.1:8080/xxx-dev.properties 指/application-dev.yml，如果这个文件不存在，就会指定到/application.yml
+      按'{application}'这种searchpath的配置，如果path存在，在path-default.properties就是指path下边的，path如果不存在，就会搞到根目录下的yml
+      并且，path如果存在的话，path.properties也是指根目录下的文件
+      所以，/{application可以空}/{profile}{-label}.yml
+        {master可以为空}/{application}-label.properties
+      访问规则太多种多样了，列举不出来了。。。
+      
+3.BUS刷新
+http://192.168.56.1:8080/bus/refresh 应该用post方法
+curl -X POST http://192.168.56.1:8080/bus/refresh
+BUS刷新可以通过Git平台上的钩子实现自动刷新
+
+4.关于Config的配置，我是觉得searchPath比较好用咯，所有的配置都可以在一个环境中管理，比如可以搞4个仓库，分别对应DEV，SIT，UAT，PRODUCT，每个环境中，把内部的全部配置都按项目区分，棒棒哒。
+    然而uri似乎只能指定到一个仓库，如果仓库这个时候挂了，就很费劲。

@@ -1,0 +1,17 @@
+server:
+  port: 8050
+spring:
+  application:
+    name: microservice-sidecar
+eureka:
+  client:
+    service-url:
+      defaultZone: http://user1:password1@eureka-ha-1:8761/eureka,http://user1:password1@eureka-ha-2:8761/eureka
+  instance:
+    prefer-ip-address: true #默认是false
+    #instance-id: ${spring.application.name}:${spring.application.instance_id:${server.port}}
+sidecar:
+  health-uri: http://localhost:8250/health.json
+  port: 8250
+
+management.security.enabled: false #用于显示acturator信息

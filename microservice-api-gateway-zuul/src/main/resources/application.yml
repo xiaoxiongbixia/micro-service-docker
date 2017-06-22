@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: microservice-api-gateway-zuul
+eureka:
+  client:
+    service-url:
+      defaultZone: http://user1:password1@eureka-ha-1:8761/eureka,http://user1:password1@eureka-ha-2:8761/eureka
+  instance:
+    prefer-ip-address: true #默认是false
+    #instance-id: ${spring.application.name}:${spring.application.instance_id:${server.port}}
+
+management.security.enabled: false
+
+variable:
+  filter-enable: false
+
+server:
+  port: 8040
+  
+##routes的配置，可以参考Apache或者Nginx
+zuul:
+  routes:
+    route1: #这种配置，可以直接把/user/1对应到microservice-provider-user1的/user/1
+      path: /user/**
+      service-id: microservice-provider-user1
+      strip-prefix: false
+    route2: #这种配置，可以把/order/feign1/user/1对应到microservice-consumer-order的/feign/user/1
+      path: /order/**
+      service-id: microservice-consumer-order
+    route3: #可以针对一个微服务定义多个路由
+      path: /spring-feign1/**
+      service-id: microservice-consumer-order
+      strip-prefix: false
+    route4: #可以成功到达/forward/forward1==/locale1/forward1
+      path: /forward/**
+      url: forward:/locale1
+    route5:
+      path: /consumer/**
+      service-id: microservice-provider-user1
+#    legacy: 这个真不知道有啥用哦，会死人的哦。是不是把其他地址的东西，全部都转向给另外的地址了
+#      path: /**
+#      url: http://localhost:8761
+  ignored-services: microservice-provider-user2, microservice-consumer-order
+    

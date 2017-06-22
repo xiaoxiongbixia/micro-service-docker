@@ -1,0 +1,10 @@
+1.eureka集群模式demo
+
+2.本示例需要配置C:\Windows\System32\drivers\etc\hosts文件
+    增加行127.0.0.1 eureka-ha-1 eureka-ha-2
+
+3.本示例在spring tool suite中运行的时候，需要在Run>Run Configurations>Spring Boot App中做配置
+    指定Name，可随意
+    指定启动类，就是项目中的启动类
+    指定profile，这个比较重要，必须和yml中的profile名称一致，本demo集群为2个eureka Server，所以要配置两次，profile的值分别取eureka-ha-profile1和eureka-ha-profile2
+  
