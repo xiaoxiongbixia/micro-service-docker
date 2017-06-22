@@ -1,0 +1,221 @@
+# 经过测算，如过不使用RC监控POD，内存会省下一大截呀
+# Eureka 服务1
+apiVersion: v1
+kind: Service
+metadata:
+  name: eureka-ha-1
+spec:
+  ports:
+  - port: 8761
+    targetPort: 8761
+    protocol: TCP
+  selector:
+    app: eureka-ha-1
+
+---
+# Eureka 服务2
+apiVersion: v1
+kind: Service
+metadata:
+  name: eureka-ha-2
+spec:
+  ports:
+  - port: 8761
+    targetPort: 8761
+    protocol: TCP
+  selector:
+    app: eureka-ha-2
+
+---
+# Eureka POD 1
+apiVersion: v1
+kind: Pod
+metadata:
+  name: eureka-ha-1.pod
+  labels:
+    app: eureka-ha-1
+    out: eureka
+spec:
+  containers:
+  - name: eureka-ha-1
+    image: micro/microservice-discovery-eureka-ha:0.0.1
+    ports:
+    - containerPort: 8761
+    env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: eureka-ha-profile1
+
+---
+# Eureka POD 2
+apiVersion: v1
+kind: Pod
+metadata:
+  name: eureka-ha-2.pod
+  labels:
+    app: eureka-ha-2
+    out: eureka
+spec:
+  containers:
+  - name: eureka-ha-2
+    image: micro/microservice-discovery-eureka-ha:0.0.1
+    ports:
+    - containerPort: 8761
+    env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: eureka-ha-profile2
+          
+---
+# Eureka 对外服务
+apiVersion: v1
+kind: Service
+metadata:
+  name: eureka-ha-out
+spec:
+  type: NodePort
+  ports:
+  - nodePort: 28761
+    protocol: TCP
+    port: 8761
+  selector:
+    out: eureka
+
+---
+# basic 服务
+apiVersion: v1
+kind: Pod
+metadata:
+  name: microservice-user1-7901.pod
+  labels:
+    app: microservice-user1-7901
+spec:
+  containers:
+  - name: microservice-user1-7901
+    image: micro/microservice-provider-user:0.0.1
+    ports:
+    - containerPort: 7901
+    env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: microservice-user1-7901
+          
+---
+# basic 服务
+apiVersion: v1
+kind: Pod
+metadata:
+  name: microservice-user2-7903.pod
+  labels:
+    app: microservice-user2-7903
+spec:
+  containers:
+  - name: microservice-user2-7903
+    image: micro/microservice-provider-user:0.0.1
+    ports:
+    - containerPort: 7903       
+    env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: microservice-user2-7903     
+          
+---
+# basic 服务
+apiVersion: v1
+kind: Pod
+metadata:
+  name: microservice-user3-7905.pod
+  labels:
+    app: microservice-user3-7905
+spec:
+  containers:
+  - name: microservice-user3-7905
+    image: micro/microservice-provider-user:0.0.1
+    ports:
+    - containerPort: 7905       
+    env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: microservice-user3-7905
+        
+---
+# 高级服务        
+apiVersion: v1
+kind: Pod
+metadata:
+  name: consumer-order-8100.pod
+  labels:
+    app: consumer-order-8100
+spec:
+  containers:
+  - name: consumer-order-8100
+    image: micro/microservice-consumer-order:0.0.1
+    ports:
+    - containerPort: 8100       
+    env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: consumer-order-8100    
+        
+---
+# 高级服务        
+apiVersion: v1
+kind: Pod
+metadata:
+  name: consumer-movie-8105.pod
+  labels:
+    app: consumer-movie-8105
+spec:
+  containers:
+  - name: consumer-movie-8105
+    image: micro/microservice-consumer-order:0.0.1
+    ports:
+    - containerPort: 8105       
+    env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: consumer-movie-8105       
+        
+---
+#sidecar        
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sidecar.pod
+  labels:
+    app: sidecar
+spec:
+  containers:
+  - name: microservice-simulate-isomerism
+    image: micro/microservice-simulate-isomerism:0.0.1
+    ports:
+    - containerPort: 8250       
+  - name: microservice-sidecar
+    image: micro/microservice-api-gateway-sidecar:0.0.1
+    ports:
+    - containerPort: 8050        
+        
+---
+#zuul 高级
+apiVersion: v1
+kind: Pod
+metadata:
+  name: microservice-api-gateway-zuul.pod
+  labels:
+    app: microservice-api-gateway-zuul
+    out: zuul
+spec:
+  containers:
+  - name: microservice-api-gateway-zuul
+    image: micro/microservice-api-gateway-zuul:0.0.1
+    ports:
+    - containerPort: 8040
+
+---
+# zuul 对外服务
+apiVersion: v1
+kind: Service
+metadata:
+  name: microservice-api-gateway-zuul-out
+spec:
+  type: NodePort
+  ports:
+  - nodePort: 28040
+    protocol: TCP
+    port: 8040
+  selector:
+    out: zuul
+
